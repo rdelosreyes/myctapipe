@@ -165,9 +165,6 @@ def full_integration_mc(event, ped, telid):
 
     """
 
-    if __debug__:
-        print(TAG, end="\n")
-
     if event is None or telid < 0:
         return None
 
@@ -212,9 +209,6 @@ def simple_integration_mc(event, ped, telid, parameters):
     substracted per gain
     """
 
-    if __debug__:
-        print(TAG, event.dl0.event_id, end="\n")
-
     if event is None or telid < 0:
         return None
     nsum = parameters['nsum']
@@ -233,12 +227,8 @@ def simple_integration_mc(event, ped, telid, parameters):
         else:
             nskip = get_num_samples(telid)-nsum
 
-    if __debug__:
-        print(TAG, nsum, nskip, end="\n")
     sum_pix_tel = []
     int_corr = 1.
-    if __debug__:
-        print(TAG, int_corr)
     for igain in range(0, get_num_channel(telid)):
         sum_pix = []
         for ipix in range(0, get_num_pixels(telid)):
@@ -281,8 +271,6 @@ def global_peak_integration_mc(event, ped, telid, parameters):
     array of pixels with integrated change [ADC cts], pedestal
     substracted per gain and peak slide
     """
-    if __debug__:
-        print(TAG, parameters['sigamp'], end="\n")
 
     # The number of samples to sum up can not be larger than the
     # number of samples
@@ -377,8 +365,6 @@ def local_peak_integration_mc(event, ped, telid, parameters):
     array of pixels with integrated change [ADC cts], pedestal
     substracted per gain and peak slide
     """
-    if __debug__:
-        print(TAG, end="\n")
 
     # The number of samples to sum up can not be larger than
     # the number of samples
@@ -480,8 +466,6 @@ def nb_peak_integration_mc(event, ped, telid, parameters):
     array of pixels with integrated change [ADC cts], pedestal
     substracted per gain and peak slide
     """
-    if __debug__:
-        print(TAG, end="\n")
 
     # The number of samples to sum up can not be larger than
     # the number of samples
@@ -493,8 +477,6 @@ def nb_peak_integration_mc(event, ped, telid, parameters):
     pix_x, pix_y = event.meta.pixel_pos[telid]
     geom = io.CameraGeometry.guess(pix_x*u.m, pix_y*u.m)
 
-    if __debug__:
-        print(TAG, end="\n")
     sum_pix_tel = []
     time_pix_tel = []
     for igain in range(0, get_num_channel(telid)):
@@ -505,8 +487,6 @@ def nb_peak_integration_mc(event, ped, telid, parameters):
             knb = 0
             # Loop over the neighbors of ipix
             ipix_nb = geom.neighbors[ipix]
-            if __debug__ and ipix == 0:
-                print(TAG, " (CT%d)" % telid, ipix_nb)
             nb_samples = [0 for ii in range(get_num_samples(telid))]
             for inb in range(len(ipix_nb)):
                 nb_samples += np.array(get_adc_sample(telid, igain)
@@ -528,8 +508,6 @@ def nb_peak_integration_mc(event, ped, telid, parameters):
                     ipeak = isamp
             peakpos = peakpos_hg = ipeak
             start = peakpos - parameters['nskip']
-            if __debug__ and ipix == 0:
-                print(TAG, ipeak)
 
             # Sanitity check?
             if start < 0:
@@ -568,8 +546,7 @@ def calibrate_amplitude_mc(integrated_charge, calib, telid, params):
     Returns None if event is None
 
     """
-    if __debug__:
-        print(TAG, end="\n")
+
     if integrated_charge is None:
         return None
     pe_pix_tel = []
@@ -587,10 +564,6 @@ def calibrate_amplitude_mc(integrated_charge, calib, telid, params):
             pe_pix = (integrated_charge[get_num_channel(telid)][ipix] *
             calib[get_num_channel(telid)][ipix])
 
-        if __debug__ and ipix == 0:
-            print(TAG, integrated_charge[get_num_channel(telid)-1][ipix],
-                  calib[get_num_channel(telid)-1][ipix],
-                  pe_pix)
         if "climp_amp" in params and params["clip_amp"] > 0:
             if pe_pix > params["clip_amp"]:
                 pe_pix = params["clip_amp"]
