@@ -32,7 +32,7 @@ def display_telescope(event, tel_id):
     npads = 1
     # Only create two pads if there is timing information extracted
     # from the calibration
-    if event.dl1.tel[tel_id].tom is None:
+    if not event.dl1.tel[tel_id].tom is None:
         npads = 2
 
     ax = plt.subplot(1, npads, npads-1)
